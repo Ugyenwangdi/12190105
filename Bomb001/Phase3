@@ -1,32 +1,31 @@
 // Understanding Phase_3
 
-
 (gdb) r
 Starting program: /home/wulfi/Desktop/Assignment 1_2/Assignment 1/bomb001/bomb answers.txt
 Welcome to my fiendish little bomb. You have 6 phases with
 which to blow yourself up. Have a nice day!
 Phase 1 defused. How about the next one?
 That's number 2.  Keep going!
-apple
+hi 				// As a test input
 
 Breakpoint 4, 0x0000000000400f15 in phase_3 ()
 (gdb) disas
 Dump of assembler code for function phase_3:
-=> 0x0000000000400f15 <+0>:	sub    $0x18,%rsp
+=> 0x0000000000400f15 <+0>:	sub    $0x18,%rsp			//makes stack 24 bytes
    0x0000000000400f19 <+4>:	mov    %fs:0x28,%rax
    0x0000000000400f22 <+13>:	mov    %rax,0x8(%rsp)
    0x0000000000400f27 <+18>:	xor    %eax,%eax
    0x0000000000400f29 <+20>:	lea    0x4(%rsp),%rcx
    0x0000000000400f2e <+25>:	mov    %rsp,%rdx
-   0x0000000000400f31 <+28>:	mov    $0x4025cf,%esi
-   0x0000000000400f36 <+33>:	callq  0x400bb0 <__isoc99_sscanf@plt>
-   0x0000000000400f3b <+38>:	cmp    $0x1,%eax
-   0x0000000000400f3e <+41>:	jg     0x400f45 <phase_3+48>
+   0x0000000000400f31 <+28>:	mov    $0x4025cf,%esi			// what are we moving from 0x4027a5?
+   0x0000000000400f36 <+33>:	callq  0x400bb0 <__isoc99_sscanf@plt>	//function that takes input
+   0x0000000000400f3b <+38>:	cmp    $0x1,%eax			//comparing 1 with result from input
+   0x0000000000400f3e <+41>:	jg     0x400f45 <phase_3+48>		//if %eax > 1 then jump pass explode bomb
    0x0000000000400f40 <+43>:	callq  0x40143d <explode_bomb>
-   0x0000000000400f45 <+48>:	cmpl   $0x7,(%rsp)
-   0x0000000000400f49 <+52>:	ja     0x400fa6 <phase_3+145>
+   0x0000000000400f45 <+48>:	cmpl   $0x7,(%rsp)			 //comparing 7 with value at 0xc(%rsp)
+   0x0000000000400f49 <+52>:	ja     0x400fa6 <phase_3+145>		//jump to bomb if above 7
    0x0000000000400f4b <+54>:	mov    (%rsp),%eax
-   0x0000000000400f4e <+57>:	jmpq   *0x402440(,%rax,8)
+   0x0000000000400f4e <+57>:	jmpq   *0x402440(,%rax,8)		//this is a jump table
    0x0000000000400f55 <+64>:	mov    $0x134,%eax
    0x0000000000400f5a <+69>:	jmp    0x400f61 <phase_3+76>
    0x0000000000400f5c <+71>:	mov    $0x0,%eax
@@ -53,18 +52,27 @@ Dump of assembler code for function phase_3:
    0x0000000000400fa4 <+143>:	jmp    0x400fb0 <phase_3+155>
    0x0000000000400fa6 <+145>:	callq  0x40143d <explode_bomb>
    0x0000000000400fab <+150>:	mov    $0x0,%eax
-   0x0000000000400fb0 <+155>:	cmpl   $0x5,(%rsp)
+   0x0000000000400fb0 <+155>:	cmpl   $0x5,(%rsp)			// compares rsp with 5
    0x0000000000400fb4 <+159>:	jg     0x400fbc <phase_3+167>
-   0x0000000000400fb6 <+161>:	cmp    0x4(%rsp),%eax
+   0x0000000000400fb6 <+161>:	cmp    0x4(%rsp),%eax			 //compares $rsp+8 to $eax == %eax holds the answer!
    0x0000000000400fba <+165>:	je     0x400fc1 <phase_3+172>
    0x0000000000400fbc <+167>:	callq  0x40143d <explode_bomb>
    0x0000000000400fc1 <+172>:	mov    0x8(%rsp),%rax
    0x0000000000400fc6 <+177>:	xor    %fs:0x28,%rax
    0x0000000000400fcf <+186>:	je     0x400fd6 <phase_3+193>
    0x0000000000400fd1 <+188>:	callq  0x400b00 <__stack_chk_fail@plt>
-   0x0000000000400fd6 <+193>:	add    $0x18,%rsp
+   0x0000000000400fd6 <+193>:	add    $0x18,%rsp			  //closes stack frame
    0x0000000000400fda <+197>:	retq   
 End of assembler dump.
+
+//  From above code, we can see this is a switch statement. I seperated each case with a space in between. Notice each case ends with 
+a call to 400fce which compares our second digit with the correct second digit
+
+// 
+Lets move the pointer to <+14> to figure out what 0x4027a5 is:
+(gdb) x/s 0x4027a5
+0x4027a5:       "%d %d"
+
 (gdb) r
 The program being debugged has been started already.
 Start it from the beginning? (y or n) y
@@ -74,6 +82,13 @@ which to blow yourself up. Have a nice day!
 Phase 1 defused. How about the next one?
 That's number 2.  Keep going!
 2 4
+
+Lets also figure out what 0xc(%rsp) holds when pointer is at this instruction:
+0x0000000000400f7a <+39>:    cmpl   $0x7,0xc(%rsp)
+
+(gdb) x/d $rsp+0xc
+0x7fffffffe4ac: 2
+^^We see %rsp+0xc holds our first digit!
 
 Breakpoint 4, 0x0000000000400f15 in phase_3 ()
 (gdb) disas
@@ -652,6 +667,18 @@ Num     Type           Disp Enb Address            What
 4       breakpoint     keep y   0x0000000000400f15 <phase_3>
 	breakpoint already hit 1 time
 (gdb) del 4
+
+^^ As we can see, our digit of 2 gets us pass that first requirement of the digit being between 1 and 7. Now we see that we are comparing
+%rax to 0x8(%rsp). Lets see whats in %rsp+8:
+
+(gdb) x/d $rsp+8
+0x7fffffffe4a8: 35
+
+It's our second digit! So it seems after the jump over the first bomb, we are comparing our second digit in the stack to a value our 
+switch table jumps to. Since we want our second digit to be 894, lets try it with an input of "2 894" --> this works!!
+
+Conclusion: We can get different possible answers depending on what we put as our first digit (between 1-7). Depending on the first digit,
+the jump table will indirectly jump to the correct second digit. 
 (gdb) r
 The program being debugged has been started already.
 Start it from the beginning? (y or n) y

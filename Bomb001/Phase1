@@ -29,8 +29,8 @@ hi                                                                  // Enter any
 Breakpoint 1, 0x0000000000400e8d in phase_1 ()
 (gdb) disas                                                         // disassemble the code
 Dump of assembler code for function phase_1:
-=> 0x0000000000400e8d <+0>:	sub    $0x8,%rsp		// building stack frame with 8 more bytes
-   0x0000000000400e91 <+4>:	mov    $0x4023d0,%esi		 // esi is being moved to an address...what is this being moved?	
+=> 0x0000000000400e8d <+0>:	sub    $0x8,%rsp			// building stack frame with 8 more bytes
+   0x0000000000400e91 <+4>:	mov    $0x4023d0,%esi		 	// esi is being moved to an address...what is this being moved?	
    0x0000000000400e96 <+9>:	callq  0x40133e <strings_not_equal>	 //will compare input string with answer
    0x0000000000400e9b <+14>:	test   %eax,%eax
    0x0000000000400e9d <+16>:	je     0x400ea4 <phase_1+23>
@@ -118,14 +118,13 @@ Dump of assembler code for function strings_not_equal:
    0x00000000004013a4 <+102>:	retq   
 End of assembler dump.
 
-//  <Strings_not_equal> doesnt have a call to bomb so it's okay to execute. Looking at %eax, we see it is = 1, so it will call the bomb.
-
+// Back to phase_3
 (gdb) disas 
 Dump of assembler code for function phase_1:
 => 0x0000000000400e8d <+0>:	sub    $0x8,%rsp
    0x0000000000400e91 <+4>:	mov    $0x4023d0,%esi
    0x0000000000400e96 <+9>:	callq  0x40133e <strings_not_equal>
-   0x0000000000400e9b <+14>:	test   %eax,%eax
+   0x0000000000400e9b <+14>:	test   %eax,%eax			// It will do AND operation in %eax and %eax. If the resultant is 0 it shows the two string are equal.
    0x0000000000400e9d <+16>:	je     0x400ea4 <phase_1+23>
    0x0000000000400e9f <+18>:	callq  0x40143d <explode_bomb>
    0x0000000000400ea4 <+23>:	add    $0x8,%rsp
@@ -159,6 +158,7 @@ es             0x0                 0
 fs             0x0                 0
 gs             0x0                 0
 
+//  <Strings_not_equal> doesnt have a call to bomb so it's okay to execute. Looking at %rax, we see it is = 1, so it will call the bomb.
 
 //  Lets try using the string we found in the disassembler code and see the value of %eax for it:
 
@@ -197,7 +197,7 @@ Dump of assembler code for function phase_1:
    0x0000000000400ea8 <+27>:	retq   
 End of assembler dump.
 (gdb) i r
-rax            0x0                 0		// %rax is equal to 0! which means it will jump pass the explode_bomb.
+rax            0x0                 0		// %rax is equal to 0 which means it will jump pass the explode_bomb.
 rbx            0x4021f0            4202992
 rcx            0x31                49
 rdx            0x0                 0
@@ -224,20 +224,13 @@ gs             0x0                 0
 (gdb) 
 
 
-(gdb) r 
-Starting program: /home/wulfi/Desktop/Assignment 1_2/Assignment 1/bomb001/bomb 
-Welcome to my fiendish little bomb. You have 6 phases with
-which to blow yourself up. Have a nice day!
-The moon unit will be divided into two divisions.
-
 Breakpoint 1, 0x0000000000400e8d in phase_1 ()
 (gdb) info break						// See the breakpoints
 Num     Type           Disp Enb Address            What
 1       breakpoint     keep y   0x0000000000400e8d <phase_1>
 	breakpoint already hit 1 time
 (gdb) del 1							// Delete the breakpoint and try to run giving the input
-(gdb) info break
-No breakpoints or watchpoints.
+
 (gdb) r
 The program being debugged has been started already.
 Start it from the beginning? (y or n) y

@@ -74,9 +74,9 @@ Lets move the pointer to <+14> to figure out what 0x4027a5 is:
 0x4027a5:       "%d %d"
 
 Lets also figure out what 0xc(%rsp) holds when pointer is at this instruction:
-0x0000000000400f7a <+39>:    cmpl   $0x7,0xc(%rsp)
+  0x0000000000400f45 <+48>:	cmpl   $0x7,(%rsp)	
 
-(gdb) x/d $rsp+0xc
+(gdb) x/d $rsp
 0x7fffffffe4ac: 2
 ^^We see %rsp+0xc holds our first digit!  We will now try using number 2 in first input
 

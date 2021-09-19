@@ -68,7 +68,7 @@ End of assembler dump.
 
 Lets move the pointer to <+14> to figure out what 0x4027a5 is:
 (gdb) x/s 0x4027a5
-0x4027a5:       "%d %d"
+0x4027a5:       "%d %d"						// Our input should be two integers separated by space
 
 (gdb) r answers.txt
 Starting program: /home/wulfi/Desktop/Assignment 1_2/Assignment 1/bomb001/bomb answers.txt
@@ -565,7 +565,7 @@ Dump of assembler code for function phase_3:
    0x0000000000400fa4 <+143>:	jmp    0x400fb0 <phase_3+155>
    0x0000000000400fa6 <+145>:	callq  0x40143d <explode_bomb>
    0x0000000000400fab <+150>:	mov    $0x0,%eax
-=> 0x0000000000400fb0 <+155>:	cmpl   $0x5,(%rsp) 				// it is comparing %rsp with 0x5
+=> 0x0000000000400fb0 <+155>:	cmpl   $0x5,(%rsp) 				// it is comparing %rsp with 0x5 after performing various operations
    0x0000000000400fb4 <+159>:	jg     0x400fbc <phase_3+167>
    0x0000000000400fb6 <+161>:	cmp    0x4(%rsp),%eax
    0x0000000000400fba <+165>:	je     0x400fc1 <phase_3+172>
@@ -652,7 +652,7 @@ Dump of assembler code for function phase_3:
    0x0000000000400fa6 <+145>:	callq  0x40143d <explode_bomb>
    0x0000000000400fab <+150>:	mov    $0x0,%eax
    0x0000000000400fb0 <+155>:	cmpl   $0x5,(%rsp)
-=> 0x0000000000400fb4 <+159>:	jg     0x400fbc <phase_3+167>
+=> 0x0000000000400fb4 <+159>:	jg     0x400fbc <phase_3+167>             // Jumps to instruction 167 only if rsp is greater than 5
    0x0000000000400fb6 <+161>:	cmp    0x4(%rsp),%eax
    0x0000000000400fba <+165>:	je     0x400fc1 <phase_3+172>
    0x0000000000400fbc <+167>:	callq  0x40143d <explode_bomb>

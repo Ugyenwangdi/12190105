@@ -73,6 +73,13 @@ Lets move the pointer to <+14> to figure out what 0x4027a5 is:
 (gdb) x/s 0x4027a5
 0x4027a5:       "%d %d"
 
+Lets also figure out what 0xc(%rsp) holds when pointer is at this instruction:
+0x0000000000400f7a <+39>:    cmpl   $0x7,0xc(%rsp)
+
+(gdb) x/d $rsp+0xc
+0x7fffffffe4ac: 2
+^^We see %rsp+0xc holds our first digit!  We will now try using number 2 in first input
+
 (gdb) r
 The program being debugged has been started already.
 Start it from the beginning? (y or n) y
@@ -82,13 +89,6 @@ which to blow yourself up. Have a nice day!
 Phase 1 defused. How about the next one?
 That's number 2.  Keep going!
 2 4
-
-Lets also figure out what 0xc(%rsp) holds when pointer is at this instruction:
-0x0000000000400f7a <+39>:    cmpl   $0x7,0xc(%rsp)
-
-(gdb) x/d $rsp+0xc
-0x7fffffffe4ac: 2
-^^We see %rsp+0xc holds our first digit!
 
 Breakpoint 4, 0x0000000000400f15 in phase_3 ()
 (gdb) disas
@@ -613,8 +613,8 @@ Dump of assembler code for function phase_3:
    0x0000000000400fab <+150>:	mov    $0x0,%eax
    0x0000000000400fb0 <+155>:	cmpl   $0x5,(%rsp)
    0x0000000000400fb4 <+159>:	jg     0x400fbc <phase_3+167>
-=> 0x0000000000400fb6 <+161>:	cmp    0x4(%rsp),%eax
-   0x0000000000400fba <+165>:	je     0x400fc1 <phase_3+172>
+=> 0x0000000000400fb6 <+161>:	cmp    0x4(%rsp),%eax               // Comparing something here
+   0x0000000000400fba <+165>:	je     0x400fc1 <phase_3+172>	    // skips bomb only if they are equal. Lets check what are being compared
    0x0000000000400fbc <+167>:	callq  0x40143d <explode_bomb>
    0x0000000000400fc1 <+172>:	mov    0x8(%rsp),%rax
    0x0000000000400fc6 <+177>:	xor    %fs:0x28,%rax
@@ -648,8 +648,11 @@ ds             0x0                 0
 es             0x0                 0
 fs             0x0                 0
 gs             0x0                 0
+
 (gdb) x/d $rsp+4
-0x7fffffffde44:	4
+0x7fffffffde44:	4    	// 4 is compared with the %rax so it will call explode_bomb
+
+
 (gdb) r
 The program being debugged has been started already.
 Start it from the beginning? (y or n) y
@@ -669,16 +672,14 @@ Num     Type           Disp Enb Address            What
 (gdb) del 4
 
 ^^ As we can see, our digit of 2 gets us pass that first requirement of the digit being between 1 and 7. Now we see that we are comparing
-%rax to 0x8(%rsp). Lets see whats in %rsp+8:
+%rax to 0x4(%rsp). Lets see whats in %rsp+8:
 
 (gdb) x/d $rsp+8
-0x7fffffffe4a8: 35
+0x7fffffffe4a8: 35     
 
 It's our second digit! So it seems after the jump over the first bomb, we are comparing our second digit in the stack to a value our 
-switch table jumps to. Since we want our second digit to be 894, lets try it with an input of "2 894" --> this works!!
+switch table jumps to. Since we want our second digit to be 409, lets try it with an input of "2 409" 
 
-Conclusion: We can get different possible answers depending on what we put as our first digit (between 1-7). Depending on the first digit,
-the jump table will indirectly jump to the correct second digit. 
 (gdb) r
 The program being debugged has been started already.
 Start it from the beginning? (y or n) y
@@ -688,7 +689,10 @@ which to blow yourself up. Have a nice day!
 Phase 1 defused. How about the next one?
 That's number 2.  Keep going!
 2 409
-Halfway there!
+Halfway there!				// It worked!!!
+
+Conclusion: We can get different possible answers depending on what we put as our first digit (between 1-7). Depending on the first digit,
+the jump table will indirectly jump to the correct second digit. 
 
 
 

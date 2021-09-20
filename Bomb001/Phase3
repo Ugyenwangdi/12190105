@@ -54,7 +54,7 @@ Dump of assembler code for function phase_3:
    0x0000000000400fab <+150>:	mov    $0x0,%eax
    0x0000000000400fb0 <+155>:	cmpl   $0x5,(%rsp)			// compares rsp with 5
    0x0000000000400fb4 <+159>:	jg     0x400fbc <phase_3+167>
-   0x0000000000400fb6 <+161>:	cmp    0x4(%rsp),%eax			 //compares $rsp+8 to $eax == %eax holds the answer!
+   0x0000000000400fb6 <+161>:	cmp    0x4(%rsp),%eax			 //compares $rsp+4 to $eax == %eax hold value at 
    0x0000000000400fba <+165>:	je     0x400fc1 <phase_3+172>
    0x0000000000400fbc <+167>:	callq  0x40143d <explode_bomb>
    0x0000000000400fc1 <+172>:	mov    0x8(%rsp),%rax
@@ -148,7 +148,7 @@ Dump of assembler code for function phase_3:
    0x0000000000400f31 <+28>: mov    $0x4025cf,%esi
    0x0000000000400f36 <+33>: callq  0x400bb0 <__isoc99_sscanf@plt>
 => 0x0000000000400f3b <+38>: cmp    $0x1,%eax					// pointer here
-   0x0000000000400f3e <+41>: jg     0x400f45 <phase_3+48>
+   0x0000000000400f3e <+41>: jg     0x400f45 <phase_3+48>			// it has to be greater than 1
    0x0000000000400f40 <+43>: callq  0x40143d <explode_bomb>
    0x0000000000400f45 <+48>: cmpl   $0x7,(%rsp)
    0x0000000000400f49 <+52>: ja     0x400fa6 <phase_3+145>
@@ -196,7 +196,7 @@ End of assembler dump.
 (gdb) x/d $rsp							// Check our first input
 0x7fffffffde40: 1
 (gdb) i r
-rax            0x2                 2				// The correct input in the first input is 2 because %rax stores the answer which we compare with our first input
+rax            0x2                 2		        // The correct input in the first input is 2 because %rax stores the answer which we compare with 1 and is greater than 1
 rbx            0x7fffffffdf58      140737488346968
 rcx            0x0                 0
 rdx            0x7fffffffde44      140737488346692
@@ -566,7 +566,7 @@ Dump of assembler code for function phase_3:
    0x0000000000400fa6 <+145>:	callq  0x40143d <explode_bomb>
    0x0000000000400fab <+150>:	mov    $0x0,%eax
 => 0x0000000000400fb0 <+155>:	cmpl   $0x5,(%rsp) 				// it is comparing %rsp with 0x5 after performing various operations
-   0x0000000000400fb4 <+159>:	jg     0x400fbc <phase_3+167>
+   0x0000000000400fb4 <+159>:	jg     0x400fbc <phase_3+167>			
    0x0000000000400fb6 <+161>:	cmp    0x4(%rsp),%eax
    0x0000000000400fba <+165>:	je     0x400fc1 <phase_3+172>
    0x0000000000400fbc <+167>:	callq  0x40143d <explode_bomb>
@@ -652,7 +652,7 @@ Dump of assembler code for function phase_3:
    0x0000000000400fa6 <+145>:	callq  0x40143d <explode_bomb>
    0x0000000000400fab <+150>:	mov    $0x0,%eax
    0x0000000000400fb0 <+155>:	cmpl   $0x5,(%rsp)
-=> 0x0000000000400fb4 <+159>:	jg     0x400fbc <phase_3+167>             // Jumps to instruction 167 only if rsp is greater than 5
+=> 0x0000000000400fb4 <+159>:	jg     0x400fbc <phase_3+167>             // Jumps to instruction 167(explode) only if rsp is greater than 5
    0x0000000000400fb6 <+161>:	cmp    0x4(%rsp),%eax
    0x0000000000400fba <+165>:	je     0x400fc1 <phase_3+172>
    0x0000000000400fbc <+167>:	callq  0x40143d <explode_bomb>
@@ -712,7 +712,7 @@ Dump of assembler code for function phase_3:
    0x0000000000400fb4 <+159>:	jg     0x400fbc <phase_3+167>
 => 0x0000000000400fb6 <+161>:	cmp    0x4(%rsp),%eax               // Comparing 0x4(%rsp) with %rax after skipping the explode function
    0x0000000000400fba <+165>:	je     0x400fc1 <phase_3+172>	    // skips bomb only if they are equal. Lets check what are being compared
-   0x0000000000400fbc <+167>:	callq  0x40143d <explode_bomb>
+   0x0000000000400fbc <+167>:	callq  0x40143d <explode_bomb>	    // Otherwise it explodes
    0x0000000000400fc1 <+172>:	mov    0x8(%rsp),%rax
    0x0000000000400fc6 <+177>:	xor    %fs:0x28,%rax
    0x0000000000400fcf <+186>:	je     0x400fd6 <phase_3+193>
@@ -746,7 +746,7 @@ es             0x0                 0
 fs             0x0                 0
 gs             0x0                 0
 
-// As we can see, our digit of 2 gets us pass that first requirement of the digit being between 1 and 7. Now we see that we are comparing
+// As we can see, our digit of 2 gets us pass that first requirement of the digit being between 1 and 7 and then less than 5 after entire operations. Now we see that we are comparing
 %rax to 0x4(%rsp). Lets see whats in %rsp+4:
 
 (gdb) x/d $rsp+4

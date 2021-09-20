@@ -1,3 +1,7 @@
+This phase requires an input of six integers separated by space. To defuse the bomb phase 2, we need to enter the correct integers. When i looked inside the read_six_numbers 
+function, I noticed the format of and input that our input should be in. After that I tried to check the code of phase 2. Firstly, it specifies that the initial 2 input has to 
+be 0 and 1 if not it hits the bomb. When I looked at what each compare instructions does by typing 
+
 // Understanding Phase 2
 
 wulfi@wulfi:~/Desktop/Assignment 1_2/Assignment 1/bomb001$ gdb bomb

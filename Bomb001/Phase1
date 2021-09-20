@@ -1,6 +1,6 @@
 This phase requires an input string. In order to defuse this phase, we have to enter the correct string otherwise the bomb explodes. I came to know that the 
 input is string because when we look at the assembly code there is a function where it compares the string and checks if the string we entered is same as the
-answer string. I found the answer by accessing the value of constant which is stored in the register at the beginning of the assembly code.
+answer string. I found the answer by accessing the value of immediates(constants) which is stored in the register at the beginning of the assembly code.
 
 // Understanding Phase 1
 // Use debugger to run bomb

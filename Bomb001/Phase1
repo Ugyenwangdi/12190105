@@ -30,7 +30,7 @@ Breakpoint 1, 0x0000000000400e8d in phase_1 ()
 (gdb) disas                                                         // disassemble the code
 Dump of assembler code for function phase_1:
 => 0x0000000000400e8d <+0>:	sub    $0x8,%rsp			// building stack frame with 8 more bytes
-   0x0000000000400e91 <+4>:	mov    $0x4023d0,%esi		 	// esi is being moved to an address...what is this being moved?	
+   0x0000000000400e91 <+4>:	mov    $0x4023d0,%esi		 	// 0x4023d0 is being moved to esi...what is this being moved?	
    0x0000000000400e96 <+9>:	callq  0x40133e <strings_not_equal>	 //will compare input string with answer
    0x0000000000400e9b <+14>:	test   %eax,%eax
    0x0000000000400e9d <+16>:	je     0x400ea4 <phase_1+23>

@@ -158,7 +158,7 @@ es             0x0                 0
 fs             0x0                 0
 gs             0x0                 0
 
-//  <Strings_not_equal> doesnt have a call to bomb so it's okay to execute. Looking at %rax, we see it is = 1, so it will call the bomb.
+//  Looking at %rax, we see it is = 1, so it will call the bomb.
 
 //  Lets try using the string we found in the disassembler code and see the value of %eax for it:
 
@@ -169,7 +169,7 @@ Start it from the beginning? (y or n) y
 Starting program: /home/wulfi/Desktop/Assignment 1_2/Assignment 1/bomb001/bomb 
 Welcome to my fiendish little bomb. You have 6 phases with
 which to blow yourself up. Have a nice day!
-The moon unit will be divided into two divisions.
+The moon unit will be divided into two divisions.				// From esi
 
 Breakpoint 1, 0x0000000000400e8d in phase_1 ()
 (gdb) disas
@@ -242,5 +242,5 @@ Phase 1 defused. How about the next one?				// Defused phase1
 
 
 
-So solution is The moon unit will be divided into two divisions.
+So solution is "The moon unit will be divided into two divisions."
 

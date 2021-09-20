@@ -261,7 +261,7 @@ ds             0x0                 0
 es             0x0                 0
 fs             0x0                 0
 gs             0x0                 0
-(gdb) x/d 0x7fffffffde20				// rsp is 0 and is compared to rax = 6
+(gdb) x/d 0x7fffffffde20				// rsp is 0 and is compared to rax = 6 so they are not equal. We know that the two has to be equal
 0x7fffffffde20:	0
 (gdb) ni
 0x0000000000400ecb in phase_2 ()
@@ -279,7 +279,7 @@ Dump of assembler code for function phase_2:
    0x0000000000400ec2 <+25>:	callq  0x40145f <read_six_numbers>
    0x0000000000400ec7 <+30>:	cmpl   $0x0,(%rsp)
    0x0000000000400ecb <+34>:	jne    0x400ed4 <phase_2+43>
-=> 0x0000000000400ecd <+36>:	cmpl   $0x1,0x4(%rsp)			// Compares 1 with our second input
+=> 0x0000000000400ecd <+36>:	cmpl   $0x1,0x4(%rsp)			// Compares 1 with our second input and they should be equal
    0x0000000000400ed2 <+41>:	je     0x400ed9 <phase_2+48>
    0x0000000000400ed4 <+43>:	callq  0x40143d <explode_bomb>
    0x0000000000400ed9 <+48>:	mov    %rsp,%rbx
@@ -325,7 +325,7 @@ Dump of assembler code for function phase_2:
    0x0000000000400edc <+51>:	lea    0x10(%rsp),%rbp
    0x0000000000400ee1 <+56>:	mov    0x4(%rbx),%eax
    0x0000000000400ee4 <+59>:	add    (%rbx),%eax
-=> 0x0000000000400ee6 <+61>:	cmp    %eax,0x8(%rbx)			// Compares rax and rbx at 0x8+$rbx
+=> 0x0000000000400ee6 <+61>:	cmp    %eax,0x8(%rbx)			// Compares rax and rbx at 0x8+$rbx and they have to be equal
    0x0000000000400ee9 <+64>:	je     0x400ef0 <phase_2+71>
    0x0000000000400eeb <+66>:	callq  0x40143d <explode_bomb>
    0x0000000000400ef0 <+71>:	add    $0x4,%rbx
@@ -413,7 +413,7 @@ Dump of assembler code for function phase_2:
    0x0000000000400f13 <+106>:	pop    %rbp
    0x0000000000400f14 <+107>:	retq   
 End of assembler dump.
-(gdb) until *0x0000000000400ef4     				// Do not explode the bomb and we can pass to next comparison
+(gdb) until *0x0000000000400ef4     				// Do not explode the bomb and we can pass to next compare instructions
 0x0000000000400ef4 in phase_2 ()
 (gdb) disas
 Dump of assembler code for function phase_2:
@@ -438,7 +438,7 @@ Dump of assembler code for function phase_2:
    0x0000000000400ee9 <+64>:	je     0x400ef0 <phase_2+71>
    0x0000000000400eeb <+66>:	callq  0x40143d <explode_bomb>
    0x0000000000400ef0 <+71>:	add    $0x4,%rbx
-=> 0x0000000000400ef4 <+75>:	cmp    %rbp,%rbx			// compare rbp and rbx
+=> 0x0000000000400ef4 <+75>:	cmp    %rbp,%rbx	    // compare rbp and rbx. This compare instruction is to keep the loop running and it will help us find the next number
    0x0000000000400ef7 <+78>:	jne    0x400ee1 <phase_2+56>
    0x0000000000400ef9 <+80>:	mov    0x18(%rsp),%rax
    0x0000000000400efe <+85>:	xor    %fs:0x28,%rax
@@ -541,7 +541,7 @@ Dump of assembler code for function phase_2:
    0x0000000000400edc <+51>:	lea    0x10(%rsp),%rbp
    0x0000000000400ee1 <+56>:	mov    0x4(%rbx),%eax
    0x0000000000400ee4 <+59>:	add    (%rbx),%eax
-=> 0x0000000000400ee6 <+61>:	cmp    %eax,0x8(%rbx)
+=> 0x0000000000400ee6 <+61>:	cmp    %eax,0x8(%rbx)      		// The %eax stores the value of next input. The input number stored in 0x8(%rbx) has to be equal to %eax
    0x0000000000400ee9 <+64>:	je     0x400ef0 <phase_2+71>
    0x0000000000400eeb <+66>:	callq  0x40143d <explode_bomb>
    0x0000000000400ef0 <+71>:	add    $0x4,%rbx
@@ -558,7 +558,7 @@ Dump of assembler code for function phase_2:
    0x0000000000400f14 <+107>:	retq   
 End of assembler dump.
 (gdb) i r
-rax            0x2                 2
+rax            0x2                 2				// %rax
 rbx            0x7fffffffde24      140737488346660
 rcx            0x0                 0
 rdx            0x7fffffffde34      140737488346676
@@ -657,7 +657,7 @@ gs             0x0                 0
 (gdb) ni
 0x0000000000400ef7 in phase_2 ()
 (gdb) ni
-0x0000000000400ee1 in phase_2 ()
+0x0000000000400ee1 in phase_2 ()		
 (gdb) disas
 Dump of assembler code for function phase_2:
    0x0000000000400ea9 <+0>:	push   %rbp
@@ -716,7 +716,7 @@ Dump of assembler code for function phase_2:
    0x0000000000400edc <+51>:	lea    0x10(%rsp),%rbp
    0x0000000000400ee1 <+56>:	mov    0x4(%rbx),%eax
    0x0000000000400ee4 <+59>:	add    (%rbx),%eax
-=> 0x0000000000400ee6 <+61>:	cmp    %eax,0x8(%rbx)
+=> 0x0000000000400ee6 <+61>:	cmp    %eax,0x8(%rbx)			// Let's check the next input here
    0x0000000000400ee9 <+64>:	je     0x400ef0 <phase_2+71>
    0x0000000000400eeb <+66>:	callq  0x40143d <explode_bomb>
    0x0000000000400ef0 <+71>:	add    $0x4,%rbx
@@ -822,7 +822,7 @@ gs             0x0                 0
 (gdb) x/d 140737488346668
 0x7fffffffde2c:	2
 (gdb) x/d 0x7fffffffde30
-0x7fffffffde30:	3
+0x7fffffffde30:	3			// rbx and rbp are not equal so it will go back to the previous instruction
 (gdb) ni
 0x0000000000400ef7 in phase_2 ()
 (gdb) ni
@@ -844,7 +844,7 @@ Dump of assembler code for function phase_2:
    0x0000000000400ed4 <+43>:	callq  0x40143d <explode_bomb>
    0x0000000000400ed9 <+48>:	mov    %rsp,%rbx
    0x0000000000400edc <+51>:	lea    0x10(%rsp),%rbp
-=> 0x0000000000400ee1 <+56>:	mov    0x4(%rbx),%eax
+=> 0x0000000000400ee1 <+56>:	mov    0x4(%rbx),%eax		`	// Pointer Jumped here
    0x0000000000400ee4 <+59>:	add    (%rbx),%eax
    0x0000000000400ee6 <+61>:	cmp    %eax,0x8(%rbx)
    0x0000000000400ee9 <+64>:	je     0x400ef0 <phase_2+71>
@@ -885,7 +885,7 @@ Dump of assembler code for function phase_2:
    0x0000000000400edc <+51>:	lea    0x10(%rsp),%rbp
    0x0000000000400ee1 <+56>:	mov    0x4(%rbx),%eax
    0x0000000000400ee4 <+59>:	add    (%rbx),%eax
-=> 0x0000000000400ee6 <+61>:	cmp    %eax,0x8(%rbx)
+=> 0x0000000000400ee6 <+61>:	cmp    %eax,0x8(%rbx)			// Let's see the numbers in this comparison
    0x0000000000400ee9 <+64>:	je     0x400ef0 <phase_2+71>
    0x0000000000400eeb <+66>:	callq  0x40143d <explode_bomb>
    0x0000000000400ef0 <+71>:	add    $0x4,%rbx
@@ -902,7 +902,7 @@ Dump of assembler code for function phase_2:
    0x0000000000400f14 <+107>:	retq   
 End of assembler dump.
 (gdb) i r
-rax            0x5                 5
+rax            0x5                 5				// the 6th number is 5. We will try running with all the inputs we got.
 rbx            0x7fffffffde2c      140737488346668
 rcx            0x0                 0
 rdx            0x7fffffffde34      140737488346676
@@ -933,7 +933,7 @@ Starting program: /home/wulfi/Desktop/Assignment 1_2/Assignment 1/bomb001/bomb a
 Welcome to my fiendish little bomb. You have 6 phases with
 which to blow yourself up. Have a nice day!
 Phase 1 defused. How about the next one?
-0 1 1 2 3 5
+0 1 1 2 3 5							
 
 Breakpoint 1, 0x0000000000400ea9 in phase_2 ()
 (gdb) i b
@@ -952,5 +952,7 @@ Phase 1 defused. How about the next one?
 0 1 1 2 3 5
 That's number 2.  Keep going!
 
+
+// So the six numbers are the fibonacci numbers
 
 

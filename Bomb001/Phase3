@@ -1,3 +1,7 @@
+This phase requires two integer inputs. The first input has to be between 1 and 7. After several operations on the first input, the resultant has to be less than 5 else it will 
+call the explode_bomb. I tried giving number 2 which is greater than 1 and this skipped all the bomb. I figured out the second input by reading the values stored in register for 
+comparing it with our second input. So the answer was "2 409".
+
 // Understanding Phase_3
 
 (gdb) r

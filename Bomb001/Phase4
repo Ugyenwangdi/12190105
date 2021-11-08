@@ -1,0 +1,63 @@
+ughen@LAPTOP-RMCFATLP:/mnt/c/Users/user/Desktop/ITS304-CSl/Assignment 1/Assignment_1/bomb001$ gdb bomb
+GNU gdb (Ubuntu 9.2-0ubuntu1~20.04) 9.2
+Copyright (C) 2020 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from bomb...
+(gdb) b phase_4
+Breakpoint 1 at 0x40100e
+(gdb) b explode_bomb
+Breakpoint 2 at 0x40143d
+(gdb) r answers.txt
+Starting program: /mnt/c/Users/user/Desktop/ITS304-CSl/Assignment 1/Assignment_1/bomb001/bomb answers.txt
+Welcome to my fiendish little bomb. You have 6 phases with
+which to blow yourself up. Have a nice day!
+Phase 1 defused. How about the next one?
+That's number 2.  Keep going!
+Halfway there!
+test
+
+Breakpoint 1, 0x000000000040100e in phase_4 ()
+(gdb) disas
+Dump of assembler code for function phase_4:
+=> 0x000000000040100e <+0>:     sub    $0x18,%rsp
+   0x0000000000401012 <+4>:     mov    %fs:0x28,%rax
+   0x000000000040101b <+13>:    mov    %rax,0x8(%rsp)
+   0x0000000000401020 <+18>:    xor    %eax,%eax
+   0x0000000000401022 <+20>:    lea    0x4(%rsp),%rcx
+   0x0000000000401027 <+25>:    mov    %rsp,%rdx
+   0x000000000040102a <+28>:    mov    $0x4025cf,%esi
+   0x000000000040102f <+33>:    callq  0x400bb0 <__isoc99_sscanf@plt>
+   0x0000000000401034 <+38>:    cmp    $0x2,%eax
+   0x0000000000401037 <+41>:    jne    0x40103f <phase_4+49>
+   0x0000000000401039 <+43>:    cmpl   $0xe,(%rsp)
+   0x000000000040103d <+47>:    jbe    0x401044 <phase_4+54>
+   0x000000000040103f <+49>:    callq  0x40143d <explode_bomb>
+   0x0000000000401044 <+54>:    mov    $0xe,%edx
+   0x0000000000401049 <+59>:    mov    $0x0,%esi
+   0x000000000040104e <+64>:    mov    (%rsp),%edi
+   0x0000000000401051 <+67>:    callq  0x400fdb <func4>
+   0x0000000000401056 <+72>:    cmp    $0x23,%eax
+   0x0000000000401059 <+75>:    jne    0x401062 <phase_4+84>
+   0x000000000040105b <+77>:    cmpl   $0x23,0x4(%rsp)
+   0x0000000000401060 <+82>:    je     0x401067 <phase_4+89>
+   0x0000000000401062 <+84>:    callq  0x40143d <explode_bomb>
+   0x0000000000401067 <+89>:    mov    0x8(%rsp),%rax
+   0x000000000040106c <+94>:    xor    %fs:0x28,%rax
+   0x0000000000401075 <+103>:   je     0x40107c <phase_4+110>
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x0000000000401077 <+105>:   callq  0x400b00 <__stack_chk_fail@plt>
+   0x000000000040107c <+110>:   add    $0x18,%rsp
+   0x0000000000401080 <+114>:   retq
+End of assembler dump.
